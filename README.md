@@ -19,7 +19,7 @@ The analysis uses Power BI, Power Query, DAX, and relational data modeling to mo
 A headline revenue number does not tell management whether performance is diversified, sustainable, or fully realized. This case study therefore focuses on four decision areas:
 
 - **Revenue concentration** — Is performance overly dependent on one geography or customer segment?
-- **Customer value** — Which customer groups contribute most to revenue?
+- **Customer value** — Which customer groups generate the most value?
 - **Revenue realization** — How much order value is completed versus still pending?
 - **Trend diagnostics** — When does performance change, and what should be investigated next?
 
@@ -27,70 +27,46 @@ A headline revenue number does not tell management whether performance is divers
 
 ## Executive Overview
 
-The report provides an interactive management view of:
+The report provides an interactive management view of Total Revenue, Completed Revenue, Total Orders, Average Order Value, Active Customers, Completed Revenue %, monthly trends, geographic performance, customer segments, and order status. City and customer-segment slicers allow stakeholders to move from the company view into specific commercial segments.
 
-| KPI / View | Purpose |
-|---|---|
-| Total Revenue | Understand overall order value |
-| Completed Revenue | Separate completed value from total order value |
-| Total Orders | Monitor transaction volume |
-| Average Order Value | Understand typical order size |
-| Active Customers | Measure the customer base represented in transactions |
-| Completed Revenue % | Measure the share of order value associated with completed orders |
-| Monthly Revenue Trend | Identify changes over time |
-| Revenue by City | Detect geographic concentration |
-| Revenue by Segment | Understand customer-value concentration |
-| Revenue by Order Status | Surface pending revenue opportunity |
-
-City and customer-segment slicers allow stakeholders to move from the company view into specific commercial segments.
-
-> **Dashboard screenshot:** A clean portfolio screenshot will be added to `images/01_executive_overview.png` after the final Power BI export.
+> **Dashboard asset pending final export:** `images/01_executive_overview.png`
 
 ---
 
 ## Analytical Model
 
-The solution is structured around five analytical tables:
-
-- **Customers** — customer identity, geography, and segment
-- **Orders** — order-level transactions, status, date, and total value
-- **Order Details** — line-level transactional detail
-- **Products** — product attributes
-- **Calendar** — time attributes used for chronological analysis
-
-The model separates transactional data from descriptive dimensions so the same measures can be analyzed consistently across customers, geography, segments, and time.
-
-> **Model screenshot:** `images/02_data_model.png` will document the final relationship model.
+The solution is structured around five analytical tables: **Customers, Orders, Order Details, Products, and Calendar**. The model separates transactional data from descriptive dimensions so measures can be analyzed consistently across customers, geography, segments, products, and time.
 
 For this case study, **order-level total is the authoritative revenue measure**. Product-line values are not presented as reconciled revenue unless independently validated against order totals.
+
+> **Model asset pending final export:** `images/02_data_model.png`
 
 ---
 
 ## Data Preparation
 
-Power Query was used to prepare the analytical layer before visualization. The workflow included structured Excel imports, data-type validation, categorical-field review, date validation, and analysis-ready transformations.
+Power Query was used for structured Excel imports, data-type validation, categorical-field review, date validation, and analysis-ready transformations.
 
-One important modeling issue occurred with the date fields: the Calendar and Orders date keys had to use compatible **Date** types before the model could load and relate them reliably. Month labels were then sorted using month number so the trend displays January through September chronologically instead of alphabetically.
+A meaningful modeling issue occurred when the date fields did not load reliably. The Calendar and Orders date keys were corrected to compatible **Date** types, restoring the model load. Month labels were then sorted using month number so the trend displays January through September chronologically instead of alphabetically.
 
-This matters because the project documents not only the finished dashboard, but also the data-quality and modeling decisions required to make the report trustworthy.
+This project therefore documents not only the finished visuals, but the data-quality and modeling decisions required to make the report trustworthy.
 
 ---
 
 ## DAX & Metric Semantics
 
-The report uses reusable measures for revenue, completed revenue, order volume, average order value, active customers, and completed revenue share. Measures respond dynamically to slicers and visual interactions.
+The report uses reusable measures for revenue, completed revenue, order volume, average order value, active customers, and completed revenue share.
 
-A key analytical distinction is documented explicitly:
+A key analytical distinction is explicit:
 
 **Completed Revenue % = Completed Revenue / Total Revenue**
 
-The current value of approximately **79.6%** describes the share of *revenue value* associated with completed orders. It should not be confused with an order-count completion rate.
+The current value of approximately **79.6%** describes the share of *revenue value* associated with completed orders. It is not an order-count completion rate. A true **Order Completion Rate** would use `Completed Orders / Total Orders`.
 
-A true **Order Completion Rate** would be:
+Technical references:
 
-`Completed Orders / Total Orders`
-
-See [`documentation/metric_definitions.md`](documentation/metric_definitions.md) for the KPI dictionary.
+- [`DAX Measure Reference`](documentation/dax_measures.md)
+- [`Metric Definitions`](documentation/metric_definitions.md)
 
 ---
 
@@ -98,9 +74,7 @@ See [`documentation/metric_definitions.md`](documentation/metric_definitions.md)
 
 ## 1. Santiago is the main revenue engine — and a concentration point
 
-Santiago generated approximately **$1.20M of $2.32M in total revenue**, accounting for roughly **52% of overall sales**.
-
-The result identifies Santiago as the strongest-performing market, but it also exposes meaningful geographic concentration.
+Santiago generated approximately **$1.20M of $2.32M in total revenue**, accounting for roughly **52% of overall sales**. The result identifies Santiago as the strongest-performing market, but it also exposes meaningful geographic concentration.
 
 **Decision opportunity:** Investigate the customer and purchasing patterns behind Santiago's performance and test whether those patterns can be replicated in Santo Domingo and La Vega.
 
@@ -153,16 +127,7 @@ That distinction is intentional: the dashboard shows what happened; additional d
 
 ## What I Would Analyze Next
 
-The current solution is intentionally strongest at **descriptive analysis**: it establishes where performance is concentrated. The next iteration would move toward diagnostic customer intelligence by adding:
-
-- Revenue per customer
-- Orders per customer and purchase frequency
-- Repeat-purchase behavior
-- Customer retention
-- Segment migration
-- Pending-order aging
-- Month-over-month growth
-- Product profitability, once line-level revenue and cost data are validated
+The current solution is intentionally strongest at **descriptive analysis**: it establishes where performance is concentrated. The next iteration moves toward diagnostic customer intelligence with revenue per customer, purchase frequency, repeat behavior, retention, segment migration, pending-order aging, month-over-month growth, and product profitability once line-level revenue and cost data are validated.
 
 This roadmap prevents the project from presenting conclusions that the current dataset cannot support.
 
@@ -173,17 +138,19 @@ This roadmap prevents the project from presenting conclusions that the current d
 **Power BI** — executive dashboard design, interactive filtering, KPI reporting, visual interactions  
 **Power Query** — import workflow, data preparation, type validation, date handling  
 **DAX** — aggregation, filtered measures, distinct-customer measures, ratio measures  
-**Data Modeling** — fact/dimension relationships, calendar relationship, metric grain awareness  
+**Data Modeling** — fact/dimension relationships, calendar relationship, metric-grain awareness  
 **Business Analysis** — business questions, KPI definitions, insight-to-action reasoning, analytical limitations
 
-Additional documentation:
+Project documentation:
 
 - [`Business Insights Memo`](documentation/business_insights.md)
 - [`Metric Definitions`](documentation/metric_definitions.md)
+- [`DAX Measure Reference`](documentation/dax_measures.md)
+- [`Analytical Journey`](documentation/analytical_journey.md) — what was learned, debugged, and what is being developed next
 
 ---
 
-## Repository Structure
+## Target Repository Structure
 
 ```text
 customer-revenue-intelligence-PowerBi/
@@ -196,11 +163,13 @@ customer-revenue-intelligence-PowerBi/
 │   ├── 01_executive_overview.png
 │   └── 02_data_model.png
 └── documentation/
+    ├── analytical_journey.md
     ├── business_insights.md
+    ├── dax_measures.md
     └── metric_definitions.md
 ```
 
-The dashboard, source dataset, and final screenshots are kept separate from the analytical documentation so a reviewer can quickly inspect either the finished report or the reasoning behind it.
+The report file, source data, screenshots, and analytical documentation are separated so a reviewer can quickly inspect either the finished solution or the reasoning behind it.
 
 ---
 
